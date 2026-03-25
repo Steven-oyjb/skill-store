@@ -42,6 +42,63 @@ export interface Skill {
   }>
 }
 
+export interface User {
+  id: string
+  openId: string
+  name: string
+  email: string
+  role: 'admin' | 'user'
+  avatar?: string
+  department?: string
+  bio?: string
+  createdAt: string
+}
+
+export interface UsageHistory {
+  id: string
+  skillId: string
+  skillName: string
+  usedAt: string
+  result: string
+}
+
+export interface AdminStats {
+  totalSkills: number
+  publishedSkills: number
+  draftSkills: number
+  totalUsers: number
+  activeUsers: number
+  totalDownloads: number
+  totalRatings: number
+  avgRating: number
+  pendingReviews: number
+  monthlyDownloads: Array<{ month: string; downloads: number }>
+  categoryDistribution: Array<{ category: string; count: number }>
+}
+
+export interface PendingReview {
+  id: string
+  skillId: string
+  skillName: string
+  description: string
+  category: string
+  tags: string[]
+  applicant: string
+  applicantId: string
+  appliedAt: string
+  status: 'pending' | 'approved' | 'rejected'
+}
+
+export interface ReviewHistory {
+  id: string
+  skillId: string
+  skillName: string
+  reviewer: string
+  result: 'approved' | 'rejected'
+  reason?: string
+  reviewedAt: string
+}
+
 export interface SearchParams {
   q?: string
   category?: string
@@ -86,7 +143,6 @@ export interface Framework {
 }
 
 export const skillService = {
-  // Search skills with filters
   search: async (params: SearchParams): Promise<SearchResult> => {
     const queryParams = new URLSearchParams()
     if (params.q) queryParams.set('q', params.q)
@@ -101,7 +157,6 @@ export const skillService = {
     return data.data
   },
 
-  // Get all skills (legacy)
   getAll: async (): Promise<Skill[]> => {
     const res = await fetch(`${API_BASE}/skills`)
     const data = await res.json()
@@ -148,21 +203,18 @@ export const skillService = {
     return data.data
   },
 
-  // Get categories
   getCategories: async (): Promise<string[]> => {
     const res = await fetch(`${API_BASE}/skills/categories`)
     const data = await res.json()
     return data.data
   },
 
-  // Get tags
   getTags: async (): Promise<string[]> => {
     const res = await fetch(`${API_BASE}/skills/tags`)
     const data = await res.json()
     return data.data
   },
 
-  // Add review
   addReview: async (skillId: string, review: { user: string; rating: number; comment: string }): Promise<any> => {
     const res = await fetch(`${API_BASE}/skills/${skillId}/reviews`, {
       method: 'POST',
@@ -175,7 +227,6 @@ export const skillService = {
 }
 
 export const aiService = {
-  // 生成选择题
   generateQuestions: async (userInput: string): Promise<Question[]> => {
     const res = await fetch(`${API_BASE}/ai/questions`, {
       method: 'POST',
@@ -186,7 +237,6 @@ export const aiService = {
     return data.data
   },
 
-  // 生成 Skill 框架
   generateFramework: async (userInput: string, answers: Record<string, string>): Promise<Framework> => {
     const res = await fetch(`${API_BASE}/ai/framework`, {
       method: 'POST',
@@ -197,7 +247,6 @@ export const aiService = {
     return data.data
   },
 
-  // 测试 Skill
   testSkill: async (prompt: string, parameters: Record<string, any>): Promise<{ result: string }> => {
     const res = await fetch(`${API_BASE}/ai/test`, {
       method: 'POST',
@@ -210,8 +259,90 @@ export const aiService = {
 }
 
 export const userService = {
-  getCurrentUser: async () => {
+  getCurrentUser: async (): Promise<User> => {
     const res = await fetch(`${API_BASE}/users/me`)
+    const data = await res.json()
+    return data.data
+  },
+
+  updateCurrentUser: async (updates: Partial<User>): Promise<User> => {
+    const res = await fetch(`${API_BASE}/users/me`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    })
+    const data = await res.json()
+    return data.data
+  },
+
+  getMySkills: async (): Promise<Skill[]> => {
+    const res = await fetch(`${API_BASE}/users/me/skills`)
+    const data = await res.json()
+    return data.data
+  },
+
+  getMyDownloads: async (): Promise<Skill[]> => {
+    const res = await fetch(`${API_BASE}/users/me/downloads`)
+    const data = await res.json()
+    return data.data
+  },
+
+  getMyUsage: async (): Promise<UsageHistory[]> => {
+    const res = await fetch(`${API_BASE}/users/me/usage`)
+    const data = await res.json()
+    return data.data
+  }
+}
+
+export const adminService = {
+  getStats: async (): Promise<AdminStats> => {
+    const res = await fetch(`${API_BASE}/admin/stats`)
+    const data = await res.json()
+    return data.data
+  },
+
+  getPendingReviews: async (): Promise<PendingReview[]> => {
+    const res = await fetch(`${API_BASE}/admin/pending`)
+    const data = await res.json()
+    return data.data
+  },
+
+  getReviewHistory: async (): Promise<ReviewHistory[]> => {
+    const res = await fetch(`${API_BASE}/admin/reviews`)
+    const data = await res.json()
+    return data.data
+  },
+
+  reviewSkill: async (reviewId: string, action: 'approve' | 'reject', reason?: string): Promise<PendingReview> => {
+    const res = await fetch(`${API_BASE}/admin/review/${reviewId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, reason }),
+    })
+    const data = await res.json()
+    return data.data
+  },
+
+  getPublishedSkills: async (): Promise<Skill[]> => {
+    const res = await fetch(`${API_BASE}/admin/published`)
+    const data = await res.json()
+    return data.data
+  },
+
+  togglePublish: async (skillId: string, action: 'publish' | 'unpublish'): Promise<Skill> => {
+    const res = await fetch(`${API_BASE}/admin/skills/${skillId}/publish`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action }),
+    })
+    const data = await res.json()
+    return data.data
+  },
+
+  getAllSkills: async (status?: string): Promise<Skill[]> => {
+    const queryParams = new URLSearchParams()
+    if (status) queryParams.set('status', status)
+    const res = await fetch(`${API_BASE}/admin/skills?${queryParams.toString()}`)
     const data = await res.json()
     return data.data
   }

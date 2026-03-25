@@ -4,6 +4,8 @@ import Home from './pages/Home'
 import SkillDetail from './pages/SkillDetail'
 import CreateSkill from './pages/CreateSkill'
 import SkillEditor from './pages/SkillEditor'
+import Profile from './pages/Profile'
+import Admin from './pages/Admin'
 
 function App() {
   return (
@@ -14,6 +16,8 @@ function App() {
           <Route path="skills/:id" element={<SkillDetail />} />
           <Route path="skills/:id/edit" element={<SkillEditor />} />
           <Route path="create" element={<CreateSkill />} />
+          <Route path="profile" element={<Profile />} />
+          <Route path="admin" element={<Admin />} />
         </Route>
       </Routes>
     </BrowserRouter>
