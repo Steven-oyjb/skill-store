@@ -316,6 +316,23 @@ const skillService = {
     
     fs.writeFileSync(skillsFilePath, JSON.stringify(skills, null, 2));
     return newReview;
+  },
+
+  // Get all published skills (for bot)
+  getAllPublishedSkills: () => {
+    const skills = skillService.getAll();
+    return skills.filter(s => s.status === 'published');
+  },
+
+  // Find skill by name (for bot)
+  findSkillByName: (name) => {
+    const skills = skillService.getAll();
+    const keyword = name.toLowerCase();
+    return skills.find(s => 
+      s.status === 'published' && 
+      (s.name.toLowerCase().includes(keyword) || 
+       s.name.toLowerCase() === keyword)
+    );
   }
 };
 
