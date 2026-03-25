@@ -4,7 +4,6 @@ const skillRoutes = require('./routes/skills');
 const userRoutes = require('./routes/users');
 const aiRoutes = require('./routes/ai');
 const adminRoutes = require('./routes/admin');
-const authRoutes = require('./routes/auth');
 const botRoutes = require('./routes/bot');
 
 const app = express();
@@ -19,8 +18,7 @@ app.use('/api/skills', skillRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/ai', aiRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/bot', botRoutes);
+
 
 // Health check
 app.get('/api/health', (req, res) => {
