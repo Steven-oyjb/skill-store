@@ -2,11 +2,39 @@ const express = require('express');
 const router = express.Router();
 const skillService = require('../services/skillService');
 
-// GET /api/skills - Get all skills
+// GET /api/skills - Get all skills with search and filters
 router.get('/', (req, res) => {
   try {
-    const skills = skillService.getAll();
-    res.json({ success: true, data: skills });
+    const { q, category, tag, sort, page = 1, limit = 20 } = req.query;
+    const result = skillService.search({
+      q,
+      category,
+      tag,
+      sort,
+      page: parseInt(page),
+      limit: parseInt(limit)
+    });
+    res.json({ success: true, data: result });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET /api/skills/categories - Get all categories
+router.get('/categories', (req, res) => {
+  try {
+    const categories = skillService.getCategories();
+    res.json({ success: true, data: categories });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// GET /api/skills/tags - Get all tags
+router.get('/tags', (req, res) => {
+  try {
+    const tags = skillService.getTags();
+    res.json({ success: true, data: tags });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -56,6 +84,19 @@ router.delete('/:id', (req, res) => {
       return res.status(404).json({ success: false, error: 'Skill not found' });
     }
     res.json({ success: true, message: 'Skill deleted' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// POST /api/skills/:id/reviews - Add review
+router.post('/:id/reviews', (req, res) => {
+  try {
+    const review = skillService.addReview(req.params.id, req.body);
+    if (!review) {
+      return res.status(404).json({ success: false, error: 'Skill not found' });
+    }
+    res.status(201).json({ success: true, data: review });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }

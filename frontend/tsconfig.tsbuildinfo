@@ -1,0 +1,1 @@
+{"root":["./src/App.tsx","./src/main.tsx","./src/components/Header.tsx","./src/components/Layout.tsx","./src/components/Sidebar.tsx","./src/pages/CreateSkill.tsx","./src/pages/Home.tsx","./src/pages/SkillDetail.tsx","./src/pages/SkillEditor.tsx","./src/services/api.ts"],"version":"5.9.3"}
