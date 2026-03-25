@@ -1,0 +1,75 @@
+[
+  {
+    "id": "skill-001",
+    "name": "飞书任务创建",
+    "description": "快速创建飞书任务，支持设置负责人、截止时间、提醒等",
+    "category": "飞书集成",
+    "tags": [
+      "飞书",
+      "任务",
+      "自动化"
+    ],
+    "author": "System",
+    "version": "1.0.0",
+    "createdAt": "2026-01-15T10:00:00Z",
+    "updatedAt": "2026-01-15T10:00:00Z",
+    "status": "published",
+    "config": {
+      "triggers": [
+        "关键词触发"
+      ],
+      "actions": [
+        "创建飞书任务"
+      ]
+    }
+  },
+  {
+    "id": "skill-002",
+    "name": "AI 新闻收集器",
+    "description": "自动收集国内外 AI 公司新闻，保存到飞书多维表格，支持去重",
+    "category": "AI 工具",
+    "tags": [
+      "AI",
+      "新闻",
+      "飞书"
+    ],
+    "author": "System",
+    "version": "1.0.0",
+    "createdAt": "2026-01-20T14:30:00Z",
+    "updatedAt": "2026-01-20T14:30:00Z",
+    "status": "published",
+    "config": {
+      "triggers": [
+        "定时触发"
+      ],
+      "actions": [
+        "收集新闻",
+        "保存到表格"
+      ]
+    }
+  },
+  {
+    "id": "skill-003",
+    "name": "会议纪要生成",
+    "description": "从飞书会议中自动提取关键信息，生成结构化会议纪要",
+    "category": "效率工具",
+    "tags": [
+      "会议",
+      "纪要",
+      "飞书"
+    ],
+    "author": "System",
+    "version": "1.0.0",
+    "createdAt": "2026-02-01T09:00:00Z",
+    "updatedAt": "2026-02-01T09:00:00Z",
+    "status": "draft",
+    "config": {
+      "triggers": [
+        "会议结束"
+      ],
+      "actions": [
+        "生成纪要"
+      ]
+    }
+  }
+]
